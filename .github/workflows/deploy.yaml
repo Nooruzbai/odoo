@@ -2,7 +2,7 @@ name: Deploy to EC2
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   deploy:
@@ -11,19 +11,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy to EC2 via SSH
+      - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: DB_USER,DB_PASSWORD,EC2_IP
           script: |
+            mkdir -p ~/odoo-project
             cd ~/odoo-project
-            # Create a .env file on the fly from GitHub Secrets
+            # This creates the .env file on your EC2 using GitHub Secrets
             echo "DB_USER=${{ secrets.DB_USER }}" > .env
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
             echo "EC2_IP=${{ secrets.EC2_HOST }}" >> .env
+            
+            # Pull the docker-compose file from your repo
+            curl -O https://raw.githubusercontent.com/${{ github.repository }}/master/docker-compose.yaml
             
             sudo docker-compose pull
             sudo docker-compose up -d
