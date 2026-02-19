@@ -1,18 +1,16 @@
 version: '3.8'
 
 services:
-  # This pulls the database image
   db:
     image: postgres:15
     restart: always
     environment:
-      - POSTGRES_USER=odoo
-      - POSTGRES_PASSWORD=odoo_password
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  # This pulls the Odoo image
   odoo:
     image: odoo:17.0
     restart: always
@@ -22,12 +20,11 @@ services:
       - db
     environment:
       - HOST=db
-      - USER=odoo
-      - PASSWORD=odoo_password
+      - USER=${DB_USER}
+      - PASSWORD=${DB_PASSWORD}
     volumes:
       - odoo_data:/var/lib/odoo
 
-  # This pulls the n8n image
   n8n:
     image: n8nio/n8n:latest
     restart: always
@@ -36,11 +33,10 @@ services:
     environment:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=db
-      - DB_POSTGRESDB_USER=odoo
-      - DB_POSTGRESDB_PASSWORD=odoo_password
+      - DB_POSTGRESDB_USER=${DB_USER}
+      - DB_POSTGRESDB_PASSWORD=${DB_PASSWORD}
       - N8N_PROTOCOL=http
-      # Replace YOUR_EC2_IP with the IP AWS gives you tomorrow
-      - WEBHOOK_URL=http://YOUR_EC2_IP:5678/
+      - WEBHOOK_URL=http://${EC2_IP}:5678/
     depends_on:
       - db
     volumes:
