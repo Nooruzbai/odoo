@@ -23,7 +23,7 @@ jobs:
             # This creates the .env file on your EC2 using GitHub Secrets
             echo "DB_USER=${{ secrets.DB_USER }}" > .env
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-            echo "EC2_IP=${{ secrets.EC2_HOST }}" >> .env
+            echo "EC2_IP=${{ secrets.DO_HOST }}" >> .env
             
             # Pull the docker-compose file from your repo
             curl -O https://raw.githubusercontent.com/${{ github.repository }}/master/docker-compose.yaml
