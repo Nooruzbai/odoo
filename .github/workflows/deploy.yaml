@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy to DO
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DO_HOST }}
-          username: ubuntu
+          username: root
           key: ${{ secrets.DO_SSH_KEY }}
           script: |
             mkdir -p ~/odoo-project
