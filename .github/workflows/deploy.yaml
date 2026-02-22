@@ -20,15 +20,15 @@ jobs:
           script: |
             mkdir -p ~/odoo-project
             cd ~/odoo-project
-            # Create .env and include the secure cookie fix
             echo "DB_USER=${{ secrets.DB_USER }}" > .env
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
             echo "EC2_IP=${{ secrets.DO_HOST }}" >> .env
             echo "N8N_SECURE_COOKIE=false" >> .env
             
-            # Pull the docker-compose file
             curl -O https://raw.githubusercontent.com/${{ github.repository }}/master/docker-compose.yaml
             
-            # Use 'docker compose' (space) instead of 'docker-compose' (hyphen)
+            # This is the magic line to clear the naming conflict
+            sudo docker compose down --remove-orphans
+            
             sudo docker compose pull
-            sudo docker compose up -d --force-recreate
+            sudo docker compose up -d
