@@ -20,13 +20,15 @@ jobs:
           script: |
             mkdir -p ~/odoo-project
             cd ~/odoo-project
-            # This creates the .env file on your EC2 using GitHub Secrets
+            # Create .env and include the secure cookie fix
             echo "DB_USER=${{ secrets.DB_USER }}" > .env
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
             echo "EC2_IP=${{ secrets.DO_HOST }}" >> .env
+            echo "N8N_SECURE_COOKIE=false" >> .env
             
-            # Pull the docker-compose file from your repo
+            # Pull the docker-compose file
             curl -O https://raw.githubusercontent.com/${{ github.repository }}/master/docker-compose.yaml
             
-            sudo docker-compose pull
-            sudo docker-compose up -d
+            # Use 'docker compose' (space) instead of 'docker-compose' (hyphen)
+            sudo docker compose pull
+            sudo docker compose up -d --force-recreate
