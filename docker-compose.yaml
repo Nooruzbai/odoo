@@ -38,6 +38,7 @@ services:
       - N8N_PROTOCOL=http
       - WEBHOOK_URL=http://${EC2_IP}:5678/
       - N8N_SECURE_COOKIE=false
+      - N8N_COMMUNITY_PACKAGES_ENABLED=true
     depends_on:
       - db
     volumes:
