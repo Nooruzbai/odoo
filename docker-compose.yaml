@@ -22,6 +22,7 @@ services:
       - HOST=db
       - USER=${DB_USER}
       - PASSWORD=${DB_PASSWORD}
+      - DATABASE=odoo
     volumes:
       - odoo_data:/var/lib/odoo
 
